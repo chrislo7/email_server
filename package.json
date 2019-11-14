@@ -1,0 +1,29 @@
+{
+  "name": "email_server",
+  "version": "1.0.0",
+  "description": "email server with Node & Express",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "server": "nodemon server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chrislo7/email_server.git"
+  },
+  "author": "Chris Lo",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/chrislo7/email_server/issues"
+  },
+  "homepage": "https://github.com/chrislo7/email_server#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "mongoose": "^5.7.11"
+  },
+  "devDependencies": {
+    "nodemon": "^1.19.4"
+  }
+}
