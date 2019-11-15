@@ -2,7 +2,7 @@
 
 A simple backend email server that receive requests via POST, along with some parameters (such as "to" address, "from" address etc.), and then relays information to a real third party email server (in this case, AWS' Simple Email Service).
 
-Built with node, express, mongoose and AWS SES.
+Built with node, express, MongoDB Atlas (with mongoose) and AWS SES.
 
 ## Instructions
 - Clone this repo
