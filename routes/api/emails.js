@@ -1,11 +1,16 @@
 const express = require('express');
 const router = express.Router();
+const aws = require('aws-sdk');
+aws.config.update({region: 'us-east-1'});
+aws.config.loadFromPath('./config/config.json');
+const ses = new aws.SES();
+
 
 // Item Model
 const Email = require('../../models/Email');
 
-// @route           POST api/items
-// @description     create an item 
+// @route           POST /send-email
+// @description     send an email via AWS SES
 router.post('/', (req, res) => {
     const newEmail = new Email({
         from: req.body.from,
@@ -16,27 +21,36 @@ router.post('/', (req, res) => {
     });
 
     let params = {
+        Source: newEmail.from,
         Destination: {
-            ToAddresses: newEmail.to
+            ToAddresses: [newEmail.to]
         }, 
         Message: {
-            Body: {
-            Html: {
-            Charset: "UTF-8", 
-            Data: newEmail.body_html
-            }, 
-            Text: {
-            Charset: "UTF-8", 
-            Data: newEmail.body_text
-            }
-            }, 
             Subject: {
-            Charset: "UTF-8", 
-            Data: newEmail.subject
-            }
-        },
-        Source: newEmail.from
+                Charset: "UTF-8", 
+                Data: newEmail.subject
+            },
+            Body: {
+                Html: {
+                    Charset: "UTF-8", 
+                    Data: newEmail.body_html
+                }, 
+                Text: {
+                    Charset: "UTF-8", 
+                    Data: newEmail.body_text
+                }
+            }, 
+        }
     };
+
+    ses.sendEmail(params, function(err, data) {
+        console.log('hello')
+        if (err) {
+            console.log(err.message);
+        } else {
+            console.log('Email sent! Message ID: ', data.MessageId);
+        }
+    })
 
     newEmail.save()
         .then(email => {
