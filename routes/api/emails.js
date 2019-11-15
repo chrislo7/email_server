@@ -5,12 +5,11 @@ aws.config.update({region: 'us-east-1'});
 aws.config.loadFromPath('./config/config.json');
 const ses = new aws.SES();
 
-
 // Email Model
 const Email = require('../../models/Email');
 
-// Email Class
-const EmailClass = require('../../class/Email');
+// BouncedEmail Model
+const BouncedEmail = require('../../models/BouncedEmail');
 
 // @route           POST /send-email
 // @description     send an email via AWS SES
@@ -46,18 +45,26 @@ router.post('/', (req, res) => {
         }
     };
 
-    ses.sendEmail(params, function(err, data) {
-        if (err) {
-            console.log(err.message);
-        } else {
-            console.log('Email sent! Message ID: ', data.MessageId);
-        }
-    })
-
-    newEmail.save()
-        .then(email => {
-            res.json(email)
-        })
+    BouncedEmail.find({ email_address: newEmail.from })
+        .then(query => {
+            console.log(query)
+            if (query.length === 0) {
+                ses.sendEmail(params, function(err, data) {
+                    if (err) {
+                        console.log(err.message);
+                    } else {
+                        console.log('Email sent! Message ID: ', data.MessageId);
+                    }
+                })
+                newEmail.save()
+                    .then(email => {
+                        res.json(email)
+                    })
+            } else {
+                res.end(`${newEmail.from} is on the blacklist.`)
+                console.log(`${newEmail.from} is on the blacklist.`)
+            }
+    });
 });
 
 module.exports = router;

@@ -4,14 +4,14 @@ const router = express.Router();
 // BouncedEmail Model
 const BouncedEmail = require('../../models/BouncedEmail');
 
-// @route           GET/ bounced-email
-// @description     save email_address to blacklist
-router.get('/', (req, res) => {
-    BouncedEmail.find()
-        .then(bouncedemails => {
-            res.json(bouncedemails)
-        })
-});
+// // @route           GET/ bounced-email
+// // @description     save email_address to blacklist
+// router.get('/', (req, res) => {
+//     BouncedEmail.find()
+//         .then(bouncedemails => {
+//             res.json(bouncedemails)
+//         })
+// });
 
 // @route           POST /bounced-email
 // @description     save email_address to blacklist
