@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 // Create Schema
-const MessageSchema = new Schema({
+const EmailSchema = new Schema({
     from: {
         type: String,
         required: true
@@ -25,4 +25,4 @@ const MessageSchema = new Schema({
     }
 });
 
-module.exports = Item = mongoose.model('item', MessageSchema);
+module.exports = Email = mongoose.model('email', EmailSchema);
