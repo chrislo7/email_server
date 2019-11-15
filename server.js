@@ -4,6 +4,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const emails = require('./routes/api/emails');
+const bouncedEmails = require('./routes/api/bouncedEmails');
 
 const app = express();
 
@@ -24,6 +25,8 @@ mongoose
 
 // Routes
 app.use('/send-email', emails);
+app.use('/bounced-email', bouncedEmails);
+
 
 const port = process.env.PORT || 5000;
 app.listen(port, () => console.log(`Server started on port ${port} ...`));

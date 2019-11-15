@@ -6,8 +6,11 @@ aws.config.loadFromPath('./config/config.json');
 const ses = new aws.SES();
 
 
-// Item Model
+// Email Model
 const Email = require('../../models/Email');
+
+// Email Class
+const EmailClass = require('../../class/Email');
 
 // @route           POST /send-email
 // @description     send an email via AWS SES
@@ -44,7 +47,6 @@ router.post('/', (req, res) => {
     };
 
     ses.sendEmail(params, function(err, data) {
-        console.log('hello')
         if (err) {
             console.log(err.message);
         } else {
