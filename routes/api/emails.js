@@ -14,6 +14,7 @@ const BouncedEmail = require('../../models/BouncedEmail');
 // @route           POST /send-email
 // @description     send an email via AWS SES
 router.post('/', (req, res) => {
+    // Email Schema
     const newEmail = new Email({
         from: req.body.from,
         to: req.body.to,
@@ -22,6 +23,7 @@ router.post('/', (req, res) => {
         body_text: req.body.body_text ? req.body.body_text : "No Text"
     });
 
+    // params for AWS ses
     let params = {
         Source: newEmail.from,
         Destination: {
@@ -45,24 +47,23 @@ router.post('/', (req, res) => {
         }
     };
 
+    // Check email in blacklist 
     BouncedEmail.find({ email_address: newEmail.from })
         .then(query => {
-            console.log(query)
-            if (query.length === 0) {
+            if (query.length === 0) { // Not in blacklist, send data.
                 ses.sendEmail(params, function(err, data) {
-                    if (err) {
-                        console.log(err.message);
-                    } else {
-                        console.log('Email sent! Message ID: ', data.MessageId);
-                    }
-                })
+                    if (err) { console.log(err.message);} 
+                    else { console.log('Email sent! Message ID: ', data.MessageId); }
+                });
+
                 newEmail.save()
                     .then(email => {
-                        res.json(email)
+                        res.json(email);
                     })
             } else {
-                res.end(`${newEmail.from} is on the blacklist.`)
-                console.log(`${newEmail.from} is on the blacklist.`)
+                // Email in blacklist, end request.
+                res.end(`${newEmail.from} is on the blacklist.`);
+                console.log(`${newEmail.from} is on the blacklist.`);
             }
     });
 });
